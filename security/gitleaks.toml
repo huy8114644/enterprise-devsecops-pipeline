@@ -1,0 +1,12 @@
+title = "Custom Enterprise Gitleaks Configuration"
+
+[extend]
+useDefault = true
+
+[[rules]]
+description = "Internal API Secret Token"
+id = "internal-api-secret"
+regex = '''(?i)(api[_-]?secret|auth[_-]?token)['"\s]*[:=]['"\s]*[0-9a-zA-Z]{32,64}'''
+entropy = 3.5
+keywords = ["api_secret", "auth_token"]
+

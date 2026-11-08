@@ -1,0 +1,12 @@
+rules:
+  - id: avoid-hardcoded-credentials
+    patterns:
+      - pattern: |
+          $VAR = "..."
+      - metavariable-regex:
+          metavariable: $VAR
+          regex: (?i)(password|secret|apikey|token)
+    message: "Hardcoded secret detected. Use environment variables or HashiCorp Vault secrets."
+    severity: ERROR
+    languages: [go, python, javascript, typescript]
+
