@@ -1,0 +1,13 @@
+{
+  "audit_timestamp": "2026-11-08T17:44:42Z",
+  "scanner": "Trivy Enterprise Engine v0.51.0",
+  "target": "services/order-api",
+  "compliance_profile": "SLSA-Level-3",
+  "vulnerabilities": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "status": "COMPLIANT"
+}
