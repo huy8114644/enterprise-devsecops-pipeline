@@ -1,7 +1,6 @@
 # Enterprise DevSecOps Pipeline (Golden Path)
 
 [![DevSecOps Pipeline](https://github.com/huy8114644/enterprise-devsecops-pipeline/actions/workflows/devsecops-pipeline.yml/badge.svg)](https://github.com/huy8114644/enterprise-devsecops-pipeline/actions/workflows/devsecops-pipeline.yml)
-[![Daily CVE Sync](https://github.com/huy8114644/enterprise-devsecops-pipeline/actions/workflows/daily-cve-sync.yml/badge.svg)](https://github.com/huy8114644/enterprise-devsecops-pipeline/actions/workflows/daily-cve-sync.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![SLSA Level 3](https://img.shields.io/badge/SLSA-Level%203-blue.svg)](https://slsa.dev)
 [![Container: Distroless](https://img.shields.io/badge/Container-Distroless-orange.svg)](https://github.com/GoogleContainerTools/distroless)
