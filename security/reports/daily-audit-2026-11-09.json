@@ -1,5 +1,5 @@
 {
-  "audit_timestamp": "2026-11-08T18:20:53Z",
+  "audit_timestamp": "2026-11-09T10:15:54Z",
   "scanner": "Trivy Enterprise Engine v0.51.0",
   "target": "services/order-api",
   "compliance_profile": "SLSA-Level-3",
