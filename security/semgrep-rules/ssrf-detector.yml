@@ -1,0 +1,17 @@
+rules:
+  - id: go-potential-ssrf-unvalidated-url
+    patterns:
+      - pattern-either:
+          - pattern: http.Get($URL)
+          - pattern: http.Post($URL, ...)
+          - pattern: (&http.Client{...}).Do($REQ)
+      - pattern-not:
+          - pattern: http.Get("...literal...")
+    message: >
+      Unvalidated URL passed to HTTP client. Ensure URL is validated against
+      a strict allowlist or private network ranges are blocked (RFC 1918 / 169.254.169.254).
+    severity: WARNING
+    languages: [go]
+    metadata:
+      cwe: "CWE-918: Server-Side Request Forgery (SSRF)"
+      owasp: "A10:2021 - Server-Side Request Forgery"
