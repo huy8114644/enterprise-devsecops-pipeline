@@ -8,8 +8,8 @@ A Go HTTP service and security CI lab for reviewing secrets, code, dependencies 
 
 ```mermaid
 flowchart LR
-  PR[Pull request] --> CI[Go vet and race tests]
-  PR --> Scans[Gitleaks, Semgrep and Trivy]
+  PR[Pull request] --> CI[Go unit tests]
+  PR --> Scans[Advisory Gitleaks, Semgrep and Trivy]
   CI --> Build[Docker build]
   Scans --> Build
   Build --> Inventory[Image scan and Syft SBOM]
@@ -23,6 +23,10 @@ flowchart LR
 ```
 
 CI builds a local image. Publication, Cosign signing and GitOps reconciliation are external steps, not supplied automation. Distroless reduces installed tools; it does not eliminate attack surface.
+
+The current CI job runs `go test -v ./...`, with neither an explicit `go vet` command nor `-race`. Gitleaks and Semgrep suppress command failures with `|| true`; Trivy findings are advisory, and the container scan explicitly uses exit code 0. A green run therefore does not establish clean security scans. Local Make targets have different failure behavior and must be assessed separately.
+
+The separate scheduled `daily-cve-sync.yml` workflow still writes fixed vulnerability counts and a compliance label, then commits that digest to `main`. Those fields are not derived from its Trivy JSON and are not evidence of CVE remediation or SLSA compliance.
 
 ## Structure and configuration
 
