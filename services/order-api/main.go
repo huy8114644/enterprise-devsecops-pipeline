@@ -24,8 +24,6 @@ type Order struct {
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("X-Content-Type-Options", "nosniff")
-	w.Header().Set("X-Frame-Options", "DENY")
 	w.WriteHeader(http.StatusOK)
 
 	resp := HealthResponse{
@@ -39,7 +37,6 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 
 func orderHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("X-Content-Type-Options", "nosniff")
 
 	order := Order{
 		ID:        "ord-774921",
@@ -50,20 +47,26 @@ func orderHandler(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(order)
 }
 
+func setupRoutes() http.Handler {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/healthz", healthHandler)
+	mux.HandleFunc("/readyz", healthHandler)
+	mux.HandleFunc("/api/v1/orders", orderHandler)
+
+	return SecurityHeadersMiddleware(mux)
+}
+
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/healthz", healthHandler)
-	mux.HandleFunc("/readyz", healthHandler)
-	mux.HandleFunc("/api/v1/orders", orderHandler)
+	handler := setupRoutes()
 
 	server := &http.Server{
 		Addr:         ":" + port,
-		Handler:      mux,
+		Handler:      handler,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		IdleTimeout:  120 * time.Second,
@@ -74,4 +77,3 @@ func main() {
 		log.Fatalf("[FATAL] Server error: %v", err)
 	}
 }
-

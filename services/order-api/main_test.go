@@ -22,7 +22,8 @@ func TestHealthHandler(t *testing.T) {
 	}
 
 	var resp HealthResponse
-	if err := json.Unmarshal(rr.Body.Bytes(), &resp); err != nil {
+	if err := json.Unmarshal(rr.Body.Bytes(), &resp);
+	err != nil {
 		t.Fatalf("could not unmarshal response: %v", err)
 	}
 
@@ -31,3 +32,29 @@ func TestHealthHandler(t *testing.T) {
 	}
 }
 
+func TestSetupRoutesSecurityHeaders(t *testing.T) {
+	handler := setupRoutes()
+
+	paths := []string{"/healthz", "/readyz", "/api/v1/orders"}
+	for _, p := range paths {
+		req := httptest.NewRequest("GET", p, nil)
+		rr := httptest.NewRecorder()
+		handler.ServeHTTP(rr, req)
+
+		if rr.Code != http.StatusOK {
+			t.Errorf("path %s returned status %d, want 200", p, rr.Code)
+		}
+
+		expectedHeaders := map[string]string{
+			"Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+			"X-Content-Type-Options":    "nosniff",
+			"X-Frame-Options":           "DENY",
+			"Referrer-Policy":           "strict-origin-when-cross-origin",
+		}
+		for k, v := range expectedHeaders {
+			if got := rr.Header().Get(k); got != v {
+				t.Errorf("path %s expected header %s: %s, got %s", p, k, v, got)
+			}
+		}
+	}
+}
